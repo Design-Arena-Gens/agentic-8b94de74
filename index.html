@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+
+        .test-item:hover {
+            transform: translateX(5px);
+        }
+
+        .test-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .status.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Testing Dashboard</h1>
+        <p class="subtitle">Automated Test Suite Monitor</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="passedTests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failedTests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+
+        <div class="test-section" id="testResults">
+            <div style="text-align: center; color: #666;">
+                Click "Run Tests" to start
+            </div>
+        </div>
+
+        <button onclick="runTests()">Run Tests</button>
+    </div>
+
+    <script>
+        const tests = [
+            { name: 'Database Connection', test: () => Math.random() > 0.1 },
+            { name: 'API Authentication', test: () => Math.random() > 0.2 },
+            { name: 'User Registration', test: () => Math.random() > 0.15 },
+            { name: 'Data Validation', test: () => Math.random() > 0.25 },
+            { name: 'Cache Performance', test: () => Math.random() > 0.3 },
+            { name: 'Error Handling', test: () => Math.random() > 0.1 },
+            { name: 'Security Checks', test: () => Math.random() > 0.2 },
+            { name: 'Load Balancing', test: () => Math.random() > 0.15 }
+        ];
+
+        async function runTests() {
+            const resultsContainer = document.getElementById('testResults');
+            resultsContainer.innerHTML = '';
+
+            let passed = 0;
+            let failed = 0;
+
+            for (let i = 0; i < tests.length; i++) {
+                const test = tests[i];
+
+                // Add test item
+                const testItem = document.createElement('div');
+                testItem.className = 'test-item';
+                testItem.innerHTML = `
+                    <div class="test-name">${test.name}</div>
+                    <div class="status" style="background: #ffc107; color: #333;">Running...</div>
+                `;
+                resultsContainer.appendChild(testItem);
+
+                // Simulate test execution
+                await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 500));
+
+                // Run test
+                const result = test.test();
+                const statusElement = testItem.querySelector('.status');
+
+                if (result) {
+                    statusElement.className = 'status pass';
+                    statusElement.textContent = '✓ Pass';
+                    passed++;
+                } else {
+                    statusElement.className = 'status fail';
+                    statusElement.textContent = '✗ Fail';
+                    failed++;
+                }
+
+                // Update stats
+                document.getElementById('totalTests').textContent = i + 1;
+                document.getElementById('passedTests').textContent = passed;
+                document.getElementById('failedTests').textContent = failed;
+            }
+        }
+    </script>
+</body>
+</html>
